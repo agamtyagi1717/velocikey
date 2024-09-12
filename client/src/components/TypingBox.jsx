@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { generate } from "random-words";
 import { useAuth0 } from "@auth0/auth0-react";
+import Confetti from "react-confetti";
 
 const TypingBox = () => {
   const [gameTime, setGameTime] = useState(10);
@@ -12,6 +13,7 @@ const TypingBox = () => {
     return generate(200);
   });
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const { user } = useAuth0();
 
@@ -25,7 +27,7 @@ const TypingBox = () => {
   const getHighScore = async () => {
     if (!user) return;
 
-    const username = user.name + " - " + user.email;
+    const username = user.name;
     // console.log(username);
 
     const response = await fetch("http://localhost:8000/highscore", {
@@ -42,12 +44,12 @@ const TypingBox = () => {
 
   const submitScore = async (result) => {
     if (user && !scoreSubmitted) {
-      
-      if(result > highscore){
-        alert("yay");
+      if (result > highscore) {
+        // Confetti run
+        setShowConfetti(true);
       }
 
-      const username = user.name + " - " + user.email;
+      const username = user.name;
       console.log(username);
       await fetch("http://localhost:8000/submit-score", {
         method: "POST",
@@ -234,13 +236,13 @@ const TypingBox = () => {
 
   return (
     <div
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      tabIndex={0}
-      ref={divRef}
-      id="game"
-      className="flex gap-10 flex-col items-center relative"
-      style={{ outline: "none" }}
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+    tabIndex={0}
+    ref={divRef}
+    id="game"
+    className="flex gap-10 flex-col items-center relative overflow-hidden"
+    style={{ outline: "none" }}
     >
       {!isFocused && (
         <div className="text-black text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -248,6 +250,9 @@ const TypingBox = () => {
         </div>
       )}
       <div id="cursor"></div>
+      <Confetti run={showConfetti} className="fixed top-0 left-14" />
+
+      {/* confetti animation that runs whenever use beats prev highscore  */}
       <div
         className={`min-w-80 wordsContainer font-thin m-12 h-[330px] overflow-hidden ${
           isFocused ? "blur-none" : "blur-sm"

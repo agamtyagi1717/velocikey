@@ -21,24 +21,26 @@ const Navbar = () => {
         <Link to="/leaderboard">Leaderboard</Link>
         {!isAuthenticated ? (
           <button
-            className="bg-[#F5B1CC] text-white py-1 px-4"
-            onClick={() => loginWithRedirect()}
+          className="bg-[#F5B1CC] text-white py-1 px-4"
+          onClick={() => loginWithRedirect()}
           >
             Log In
           </button>
         ) : (
-          <div className="flex flex-col items-center">
-            {/* <p>{user.name}</p> */}
+          <div className="flex gap-5 items-center">
+            <img alt="pfp" className="w-10 rounded-full" src={user.picture}/>
+            <p className="text-lg">{user && user.name}</p>
             <button
-              className="bg-[#F5B1CC] text-white py-1 px-4"
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
-            >
-              Log Out
-            </button>
+            className="bg-[#F5B1CC] text-white py-1 px-4"
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
+          >
+            Log Out
+          </button>
           </div>
         )}
+        
       </div>
     </nav>
   );
