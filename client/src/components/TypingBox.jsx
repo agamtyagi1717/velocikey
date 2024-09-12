@@ -1,14 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { generate } from "random-words";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const TypingBox = () => {
-  const [gameTime, setGameTime] = useState(15);
+  const [gameTime, setGameTime] = useState(10);
+  const [highscore, setHighScore] = useState("requires sign up");
   const [wpm, setWpm] = useState(0);
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [wordsArray] = useState(() => {
     return generate(200);
   });
+  const [scoreSubmitted, setScoreSubmitted] = useState(false);
+
+  const { user } = useAuth0();
 
   const addClass = (el, name) => {
     el.className += " " + name;
@@ -16,6 +21,54 @@ const TypingBox = () => {
   const removeClass = (el, name) => {
     el.className = el.className.replace(name, " ");
   };
+
+  const getHighScore = async () => {
+    if (!user) return;
+
+    const username = user.name + " - " + user.email;
+    // console.log(username);
+
+    const response = await fetch("http://localhost:8000/highscore", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username }),
+    });
+
+    const data = await response.json();
+    setHighScore(data.highScore);
+  };
+
+  const submitScore = async (result) => {
+    if (user && !scoreSubmitted) {
+      
+      if(result > highscore){
+        alert("yay");
+      }
+
+      const username = user.name + " - " + user.email;
+      console.log(username);
+      await fetch("http://localhost:8000/submit-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: username, score: result }),
+      });
+
+      setScoreSubmitted(true);
+    }
+  };
+  useEffect(() => {
+    getHighScore();
+  });
+
+  useEffect(() => {
+    if (user && gameTime <= 0 && !scoreSubmitted) {
+      submitScore(wpm);
+    }
+  }, [gameTime, user, wpm, scoreSubmitted]);
 
   useEffect(() => {
     window.timer = null;
@@ -80,13 +133,12 @@ const TypingBox = () => {
           const msPassed = currentTime - window.gameStart;
           const sPassed = Math.round(msPassed / 1000);
           const sLeft = gameTime - sPassed;
+          setGameTime(sLeft);
 
           if (sLeft <= 0) {
             gameOver();
             return;
           }
-
-          setGameTime(sLeft);
         }, 1000);
       }
 
@@ -221,9 +273,10 @@ const TypingBox = () => {
           ))}
         </div>
       </div>
-      <div className="text-[#F5B1CC] flex w-full justify-between">
+      <div className="text-[#F5B1CC] flex items-center w-full justify-between">
         <h1 className="text-6xl">{gameTime}</h1>
-        <h1 className="text-6xl">wpm:{wpm}</h1>
+        <h1>wpm:{wpm}</h1>
+        <h1>High-score: {highscore}</h1>
         <button
           onClick={() => window.location.reload()}
           className="bg-[#F5B1CC] text-white px-6 py-2 text-2xl"
