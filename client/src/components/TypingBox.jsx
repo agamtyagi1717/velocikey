@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Confetti from "react-confetti";
 
 const TypingBox = () => {
-  const [gameTime, setGameTime] = useState(10);
+  const [gameTime, setGameTime] = useState(15);
   const [highscore, setHighScore] = useState("requires sign up");
   const [wpm, setWpm] = useState(0);
   const divRef = useRef(null);
@@ -29,8 +29,10 @@ const TypingBox = () => {
 
     const username = user.name;
     // console.log(username);
+    // http://localhost:8000 :: localhost server
+    // https://velocikeys.onrender.com :: production server
 
-    const response = await fetch("http://localhost:8000/highscore", {
+    const response = await fetch("https://velocikeys.onrender.com/highscore", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +53,7 @@ const TypingBox = () => {
 
       const username = user.name;
       console.log(username);
-      await fetch("http://localhost:8000/submit-score", {
+      await fetch("https://velocikeys.onrender.com/submit-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -250,7 +252,7 @@ const TypingBox = () => {
         </div>
       )}
       <div id="cursor"></div>
-      <Confetti run={showConfetti} className="fixed top-0 left-14" />
+      <Confetti run={showConfetti} recycle={false} className="fixed top-0 left-14" />
 
       {/* confetti animation that runs whenever use beats prev highscore  */}
       <div

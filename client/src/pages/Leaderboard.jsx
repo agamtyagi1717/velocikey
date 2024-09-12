@@ -5,7 +5,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     const fetchTopScores = async () => {
-      const response = await fetch("http://localhost:8000/leaderboard");
+      const response = await fetch("https://velocikeys.onrender.com/leaderboard");
       const data = await response.json();
       setScores(data);
     };
