@@ -3,6 +3,7 @@ import Homepage from './pages/Homepage';
 import Leaderboard from './pages/Leaderboard';
 import Navbar from './pages/Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Stats from './pages/Stats';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Homepage />}/>
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/stats" element={<Stats />} />
         </Routes>
       </div>
     </Router>

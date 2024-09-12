@@ -56,24 +56,38 @@ app.get("/leaderboard", async (req, res) => {
 
 // endpoint to get highscore of the logged in user
 app.post("/highscore", async (req, res) => {
-    const { username } = req.body;
-  
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
-  
-    try {
-      const scores = await Score.find({ username });
-  
-      // If no scores are found for the username, set highScore to 0
-      const highScore = scores.length === 0 ? 0 : Math.max(...scores.map((score) => score.score));
-  
-      res.json({ username, highScore });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  });
-  
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ message: "Username is required" });
+  }
+
+  try {
+    const scores = await Score.find({ username });
+
+    const highScore = scores.length === 0 ? 0 : Math.max(...scores.map((score) => score.score));
+
+    res.json({ username, highScore });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// endpoint to get all scores for the my stats page
+app.post('/get-scores', async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+
+  try {
+    const scores = await Score.find({ username });
+    res.json(scores);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 app.listen(8000, () => console.log("Server running on 8000"));

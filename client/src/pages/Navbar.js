@@ -19,6 +19,7 @@ const Navbar = () => {
 
       <div className="text-2xl items-center flex gap-10">
         <Link to="/leaderboard">Leaderboard</Link>
+        <Link to="/stats">My Stats</Link>
         {!isAuthenticated ? (
           <button
           className="bg-[#F5B1CC] text-white py-1 px-4"
