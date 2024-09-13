@@ -91,7 +91,7 @@ const Stats = () => {
           </div>
         </div>
       ) : (
-        <div className="mt-16 flex flex-col items-center gap-10">
+        <div className="mt-16 text-center flex flex-col items-center gap-10">
           <h1>Login to see your stats graphs here</h1>
           <button
             className="bg-[#F5B1CC] text-2xl text-white py-1 px-4"
