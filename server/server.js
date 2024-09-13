@@ -90,4 +90,8 @@ app.post('/get-scores', async (req, res) => {
   }
 });
 
+app.get('/', (req,res) => {
+  res.send("sup");
+})
+
 app.listen(8000, () => console.log("Server running on 8000"));
