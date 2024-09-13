@@ -27,8 +27,8 @@ const TypingBox = () => {
   const getHighScore = async () => {
     if (!user) return;
 
-    const username = user.name;
-    // console.log(username);
+    const username = user.nickname;
+    // console.log(user);
     // http://localhost:8000 :: localhost server
     // https://velocikeys.onrender.com :: production server
 
@@ -51,8 +51,8 @@ const TypingBox = () => {
         setShowConfetti(true);
       }
 
-      const username = user.name;
-      console.log(username);
+      const username = user.nickname;
+      // console.log(username);
       await fetch("https://velocikeys.onrender.com/submit-score", {
         method: "POST",
         headers: {
@@ -118,6 +118,7 @@ const TypingBox = () => {
       const isSpace = keyPressed === " ";
       const isBackspace = keyPressed === "Backspace";
       const isFirstLetter = currentLetter === currentWord.firstChild;
+      const isFirstWord = currentWord === document.getElementById('words').firstChild;
 
       if (document.getElementById("game").classList.contains("over")) {
         return;
@@ -183,6 +184,10 @@ const TypingBox = () => {
       }
       if (isBackspace) {
         if (currentLetter && isFirstLetter) {
+          if(isFirstWord){
+            return ;
+          }
+
           removeClass(currentWord, "current");
           addClass(currentWord.previousSibling, "current");
           removeClass(currentLetter, "current");
@@ -191,10 +196,15 @@ const TypingBox = () => {
           removeClass(currentWord.previousSibling.lastChild, "correct");
         }
         if (currentLetter && !isFirstLetter) {
+          const isExtraLetter = currentLetter.classList.contains('extra');
+          
           removeClass(currentLetter, "current");
           addClass(currentLetter.previousSibling, "current");
           removeClass(currentLetter.previousSibling, "incorrect");
           removeClass(currentLetter.previousSibling, "correct");
+          if(isExtraLetter){
+            currentLetter.remove();
+          }
         }
         if (!currentLetter) {
           addClass(currentWord.lastChild, "current");
@@ -280,13 +290,13 @@ const TypingBox = () => {
           ))}
         </div>
       </div>
-      <div className="text-[#F5B1CC] flex items-center w-full justify-between">
+      <div className="border bg-[#F0A45D] bg-opacity-10 px-5 rounded-lg text-[#F0A45D] flex flex-col md:flex-row items-center w-full justify-between">
         <h1 className="text-6xl">{gameTime}</h1>
-        <h1>wpm:{wpm}</h1>
+        <h1 className="">wpm:{wpm}</h1>
         <h1>High-score: {highscore}</h1>
         <button
           onClick={() => window.location.reload()}
-          className="bg-[#F5B1CC] text-white px-6 py-2 text-2xl"
+          className="bg-[#F0A45D] text-white px-6 py-2 text-2xl"
         >
           Restart
         </button>

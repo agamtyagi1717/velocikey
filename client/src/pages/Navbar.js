@@ -30,7 +30,7 @@ const Navbar = () => {
         ) : (
           <div className="flex gap-5 items-center">
             <img alt="pfp" className="w-10 rounded-full" src={user.picture}/>
-            <p className="text-lg">{user && user.name}</p>
+            <p className="text-lg">{user && user.nickname}</p>
             <button
             className="bg-[#F5B1CC] text-white py-1 px-4"
             onClick={() =>

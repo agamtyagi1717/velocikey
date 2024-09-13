@@ -16,7 +16,7 @@ const Leaderboard = () => {
 
   return (
     <div className="w-[80vw] flex flex-col gap-10">
-      <h1>Leaderboard - Top 10 Global</h1>
+      <h1 className="text-[#F0A45D]">Leaderboard - Top 10 Global</h1>
 
       <table className="min-w-full text-xl bg-white border border-gray-200">
         <thead>
